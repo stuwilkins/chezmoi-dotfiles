@@ -1,0 +1,247 @@
+# Stuart Wilkins
+
+# Lets exit if this is Jupyterhub
+
+if [[ -n "$JUPYTERHUB_USER" ]]; then
+	echo "Running in Jupyterhub environment ...."
+	return 0
+fi
+
+# Ok do we have ZSH? If so exec zsh and exit
+
+if test -t 1; then
+	if [[ -e "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" ]] && [[ -e "${HOME}/.oh-my-zsh" ]]; then
+		if [[ -e "/bin/zsh" ]]; then
+			# Check ZSH Version
+			ZSH_VER=$(zsh --version | cut -d ' ' -f 2) 
+			if printf "${ZSH_VER}\n5.1" | sort -CVr; then
+				exec zsh
+			fi
+		fi
+	fi
+fi
+
+# Separated to look for portions that are platform/system
+# Dependent
+
+if [ -z ${HOSTNAME+x} ]; then
+	export HOSTNAME=$(hostname)
+else
+	export HOSTNAME
+fi
+
+#
+# Set the prompt
+#
+PS1=""
+PS1=$PS1"[\[\033[0;32m\]\u@`hostname -f`\[\033[0m\] \[\033[0;33m\]\w "
+PS1=$PS1"\$(if [[ \$? == 0 ]]; then echo \"\[\033[01;32m\]\342\234\223\"; else echo \"\[\033[01;31m\]\342\234\227\"; fi) "
+PS1=$PS1"\[\033[0m\]] \$"
+
+#
+# Setup all paths
+#
+
+if [ -e "/usr/sbin" ]; then
+	export PATH="/usr/sbin:$PATH"
+fi
+
+if [ -e "/sbin" ]; then
+	export PATH="/sbin:$PATH"
+fi
+
+if [ -e "/usr/local/bin" ]; then
+	export PATH="/usr/local/bin:$PATH"
+fi
+
+if [ -e "/usr/local/opt/coreutils/libexec/gnubin" ]; then
+	export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+fi
+
+if [ -e "$HOME/.local/bin" ]; then
+	export PATH="$HOME/.local/bin:$PATH"
+fi
+
+if [ -e "$HOME/.local/bin" ]; then
+	export PATH="$HOME/.local/bin:$PATH"
+fi
+
+if [ -e "$HOME/bin" ]; then
+	export PATH="$HOME/bin:$PATH"
+fi
+
+if [ -e "$HOME/share/man" ]; then
+	export MANPATH="$HOME/share/man:$MANPATH"
+fi
+
+#
+# Setup miniconda if here
+#
+
+if [ -d "$HOME/miniconda3" ]; then
+	source "$HOME/miniconda3/etc/profile.d/conda.sh"
+	conda activate
+fi
+
+#
+# Some useful environmental variables
+#
+# Editors and pagers
+#
+
+if [ -e "$HOME/bin/vim" ]; then
+	export EDITOR=$HOME/bin/vim
+	export SVN_EDITOR=$HOME/bin/vim
+else
+	export EDITOR=/usr/bin/vim
+	export SVN_EDITOR=/usr/bin/vim
+fi
+
+export PAGER=/usr/bin/less
+export LESS='-r -m -i'
+
+# Make use multiple cores with make
+if [[ $OSTYPE == linux* ]]; then
+	export MAKEFLAGS="--jobs `nproc`"
+	export CMAKE_BUILD_PARALLEL_LEVEL=`nproc`
+elif [[ $OSTYPE == darwin* ]]; then
+	export MAKEFLAGS="--jobs `sysctl -n hw.ncpu`"
+	export CMAKE_BUILD_PARALLEL_LEVEL=`sysctl -n hw.ncpu`
+fi
+
+#
+# gitprompt configuration
+#
+
+if [ -e "$HOME/.bash-git-prompt" ]; then
+	# Set config variables first
+	GIT_PROMPT_ONLY_IN_REPO=1
+	#GIT_PROMPT_FETCH_REMOTE_STATUS=1
+	GIT_PROMPT_IGNORE_SUBMODULES=1
+	GIT_PROMPT_SHOW_UPSTREAM=1
+	GIT_PROMPT_SHOW_UNTRACKED_FILES=no
+
+	#GIT_PROMPT_START='\n'   # uncomment for custom prompt start sequence
+	GIT_PROMPT_START="\[\033[0;32m\]\u@\h\[\033[0m\] \033[0;33m\]\w\[\033[0m"
+	GIT_PROMPT_END="\n\t \$(if [[ \$? == 0 ]]; then echo \"\[\033[01;32m\]\342\234\223\"; else echo \"\[\033[01;31m\]\342\234\227\"; fi) "
+	GIT_PROMPT_END=$GIT_PROMPT_END"\[\033[0m\] \$"
+
+	# as last entry source the gitprompt script
+	# GIT_PROMPT_THEME=Custom # use custom .git-prompt-colors.sh
+	# GIT_PROMPT_THEME=Solarized # use theme optimized for solarized color scheme
+	source ~/.bash-git-prompt/gitprompt.sh
+fi
+
+#
+# Travis JEM 
+#
+
+if [ -f $HOME/.travis/travis.sh ]; then 
+	source $HOME/.travis/travis.sh
+fi
+
+#
+# Setup iTerm intergation
+#
+if [[ -f "${HOME}/.iterm2_shell_integration.bash" ]]; then
+	source "${HOME}/.iterm2_shell_integration.bash"
+fi
+
+#
+# Setup Aliases
+#
+
+if [[ $OSTYPE == darwin* ]]; then
+	alias ls="ls -h -G"
+	alias ll="ls -h -G -l"
+	alias la="ls -h -G -l -A"
+	alias mvim="open -a MacVim "
+elif [[ $OSTYPE == linux* ]]; then
+	alias ls="ls --color=auto -h"
+	alias ll="ls --color-auto -lh"
+	alias la="ls --color-auto -lA"
+fi
+
+alias rm="rm -i"
+alias cp="cp -v"
+alias mv="mv -v"
+alias grep="grep --color=auto --line-number"
+alias caget="caget -a"
+alias sudo="sudo -E"
+alias tmux="tmux -2"
+alias vi="vim -p"
+alias rmswp="find . -name \.*\.swp -exec rm {} \;"
+alias rmswo="find . -name \.*\.swo -exec rm {} \;"
+alias sshpw="ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no "
+
+#
+# One Password stuff
+#
+if [ $(which op) ]; then
+	alias op-login='export OP_SESSION_my=`op signin --output=raw`'
+fi
+
+#
+# Deal with SSH Agent
+#
+
+SSH_ENV="$HOME/.ssh/environment.$HOSTNAME"
+#
+#function start_agent {
+#    echo "Initialising new SSH agent ...."
+#    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+#    echo succeeded
+#    chmod 600 "${SSH_ENV}"
+#    . "${SSH_ENV}" > /dev/null
+#    /usr/bin/ssh-add;
+#}
+#
+## Source SSH settings, if applicable
+#
+#if [ -f "${SSH_ENV}" ]; then
+#    . "${SSH_ENV}" > /dev/null
+#    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+#        start_agent;
+#    }
+#else
+#    start_agent;
+#fi 
+
+#
+# Do Nice Prompts
+#
+
+setTerminalText () {
+    # echo works in bash & zsh
+    local mode=$1 ; shift
+    echo -ne "\033]$mode;$@\007"
+} 
+
+stt_both  () { setTerminalText 0 $@; }
+stt_tab   () { setTerminalText 1 $@; }
+stt_title () { setTerminalText 2 $@; }
+
+set-window-title() {
+	_HOSTNAME=`hostname -f`
+	stt_tab ${USER}@${_HOSTNAME}
+	stt_title "${USER}@${_HOSTNAME}: ${PWD/#$HOME/~}"
+}
+
+PROMPT_COMMAND="set-window-title"
+
+
+#
+# Run other bashrc files if present
+#
+
+if [ -e "$HOME/.bashrc-local" ]; then
+	source "$HOME/.bashrc-local"
+fi
+
+if [ -e "$HOME/.bashrc-nsls2" ]; then
+	source "$HOME/.bashrc-nsls2"
+fi
+
+if [ -e "$HOME/.bashrc-csxlab" ]; then
+	source "$HOME/.bashrc-csxlab"
+fi

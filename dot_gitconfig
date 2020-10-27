@@ -1,0 +1,36 @@
+[user]
+	name = Stuart B. Wilkins
+	email = swilkins@bnl.gov
+	signingKey = 1826DCFA226C7A682CC000A4DB651B6B9799DFFB
+
+	editor = vim
+	excludesfile = .gitignore_global
+[commit]
+	gpgsign = true
+[color]
+	ui = true
+[pager]
+	branch = false
+#[pull]
+#  # Default to rebasing on pull
+#  rebase = true
+[fetch]
+  # Always prune (when fetching and pulling)
+  prune = 1
+[status]
+  subodulesummary = 1
+[alias]
+  unstage = reset HEAD --
+[rebase]
+  # Run `git stash` if needed before a `git rebase`
+  autoStash = true
+  # Auto-add `--autosquash` to `git rebase`
+  autoSquash = true
+[tag]
+  sort=creatordate
+#[push]
+#	default = simple
+[push]
+	followTags = true
+[pack]
+	threads = 1

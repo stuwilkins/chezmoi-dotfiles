@@ -1,0 +1,5 @@
+0000000000000000000000000000000000000000 87edf16e05598505927410f6b06bbc5a6003805b Stuart B. Wilkins <swilkins@bnl.gov> 1599222623 -0400	clone: from https://github.com/ohmyzsh/ohmyzsh.git
+87edf16e05598505927410f6b06bbc5a6003805b 765966606de9f1fc337818984220268af62926d6 Stuart B. Wilkins <swilkins@bnl.gov> 1601251889 -0400	pull --rebase --stat origin master: checkout 765966606de9f1fc337818984220268af62926d6
+765966606de9f1fc337818984220268af62926d6 765966606de9f1fc337818984220268af62926d6 Stuart B. Wilkins <swilkins@bnl.gov> 1601251889 -0400	rebase finished: refs/heads/master onto 765966606de9f1fc337818984220268af62926d6
+765966606de9f1fc337818984220268af62926d6 53cbd658f5ae6874af0d804cee6748dfba69e786 Stuart B. Wilkins <swilkins@bnl.gov> 1602753906 -0400	pull --rebase --stat origin master: checkout 53cbd658f5ae6874af0d804cee6748dfba69e786
+53cbd658f5ae6874af0d804cee6748dfba69e786 53cbd658f5ae6874af0d804cee6748dfba69e786 Stuart B. Wilkins <swilkins@bnl.gov> 1602753906 -0400	rebase finished: refs/heads/master onto 53cbd658f5ae6874af0d804cee6748dfba69e786

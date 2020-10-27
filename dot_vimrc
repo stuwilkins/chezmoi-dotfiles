@@ -1,0 +1,98 @@
+runtime bundle/vim-pathogen/autoload/pathogen.vim
+execute pathogen#infect()
+
+" Set 256 Colors
+set t_Co=256
+
+filetype plugin indent on
+syntax on
+set wildmenu
+set showmode
+set showcmd
+set visualbell
+set autoread
+set ruler
+set ignorecase
+set smartcase
+set hlsearch
+set encoding=utf-8
+set fileformat=unix
+set undofile
+set undodir=~/.vim/undo
+set number
+
+" Always show the status line
+set laststatus=2
+
+" Set backspace
+set backspace=2
+
+" Indentation settings for using 4 spaces instead of tabs.
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+set smarttab
+set smartindent
+set autoindent
+
+" Modelines
+set modeline
+set modelines=5
+
+let g:pymode_trim_whitespaces = 1
+let g:pymode_folding = 0
+let g:pymode_rope = 0
+
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_working_path_mode = 'ra'
+
+if !exists('g:easy_align_delimiters')
+  let g:easy_align_delimiters = {}
+endif
+let g:easy_align_delimiters['"'] = { 'pattern': '"', 'ignore_groups': ['String'] }
+let g:easy_align_delimiters['d'] = {
+\ 'pattern': ' \(\S\+\s*[;=]\)\@=',
+\ 'left_margin': 0, 'right_margin': 0
+\ }
+
+nnoremap <F5> :GundoToggle<CR>
+
+" Doxygen settings
+let g:load_doxygen_syntax=1
+let g:C_UseTool_cmake    = 'yes'
+let g:C_UseTool_doxygen  = 'yes'
+let g:DoxygenToolkit_briefTag_pre="\\brief "
+let g:DoxygenToolkit_paramTag_pre="\param "
+let g:DoxygenToolkit_returnTag="\Returns   "
+let g:DoxygenToolkit_blockHeader="-------------------------------------------------------------------------"
+let g:DoxygenToolkit_blockFooter="-------------------------------------------------------------------------"
+let g:DoxygenToolkit_authorName="Stuart B. Wilkins"
+let g:DoxygenToolkit_licenseTag="My own license"
+
+" CDC = Change to Directory of Current file
+command CDC cd %:p:h
+
+" Set tab completion to BASH style
+set wildmode=longest,list,full
+set wildmenu
+
+" Set YAML spaces correctly
+autocmd FileType yaml setlocal ts=4 sts=4 sw=4 expandtab
+
+" Set dark background
+set background=dark
+
+" Remove tralling whitespace from c filed
+autocmd FileType c,cpp autocmd BufWritePre <buffer> %s/\s\+$//e
+
+" Stuff for YAML
+" au! BufNewFile,BufReadPost *.{yaml,tml} set filetype=yaml foldmethod=indent
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType yaml autocmd BufWritePre <buffer> %s/\s\+$//e
+
+set noswapfile
+set nobackup
+set nowritebackup
+set viminfo=
+set clipboard=
