@@ -1,0 +1,4 @@
+SetMacro( 'AUTHOR',      'Stuart B. Wilkins')
+SetMacro( 'AUTHORREF',   'sbw' )
+SetMacro( 'EMAIL',       'stuart@stuwilkins.org')
+SetMacro( 'COPYRIGHT',   'Copyright (c) |YEAR|, |AUTHOR|' )
